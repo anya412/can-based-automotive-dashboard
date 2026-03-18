@@ -3,7 +3,6 @@
  *  Description : Application entry point.
  *                Initializes system modules and continuously processes
  *                CAN messages for display and indicator control.
- *
  ***********************************************************************/
 
 #include <xc.h>
@@ -54,7 +53,7 @@ void main(void)
 {
     init_system();
 
-    /* Draw static labels once */
+    /* Display static labels once */
     display_labels();
 
     while (1)
