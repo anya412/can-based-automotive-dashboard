@@ -30,4 +30,4 @@ uint16_t get_rpm();
 uint16_t get_engine_temp();
 IndicatorStatus process_indicator();
 
-#endif	/* ECU1_SENSOR_H */
+#endif
