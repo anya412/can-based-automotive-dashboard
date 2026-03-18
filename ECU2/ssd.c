@@ -13,7 +13,6 @@ void init_ssd_control(void)
 	SSD_CNT_PORT = SSD_CNT_PORT & 0xF0;
 }
 
-/* Better if implemented in timer handler */
 void display(unsigned char data[])
 {
 	unsigned int wait;
