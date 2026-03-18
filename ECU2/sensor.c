@@ -12,10 +12,10 @@ uint16_t get_rpm()
     return rpm;
 }
 
-uint16_t get_engine_temp()
-{
-    //Implement the engine temperature function
-}
+// uint16_t get_engine_temp()
+// {
+//     Implement the engine temperature function
+// }
 
 IndicatorStatus process_indicator()
 {
