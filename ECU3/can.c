@@ -4,11 +4,10 @@
  *                Provides initialization, message transmit and receive
  *                interfaces using Standard Identifier (11-bit).
  *
- *  API:
+ *  Functions:
  *      - init_can()
  *      - can_transmit()
  *      - can_receive()
- *
  ***********************************************************************/
 
 #include <xc.h>
@@ -72,7 +71,7 @@ void init_can(void)
 
     /* Receive all valid messages */
     RXB0CON = 0x00;
-    RXB0CONbits.RXM0 = 1;     /* Accept all messages */
+    RXB0CONbits.RXM0 = 1;
     RXB0CONbits.RXM1 = 1;
 }
 
@@ -122,9 +121,8 @@ void can_transmit(uint16_t msg_id, const uint8_t *data, uint8_t len)
  *          data    - pointer to store payload bytes
  *          len     - pointer to data length
  *
- *      Note:
- *          If no message is available:
- *              *len = 0
+ *  If no message is available:
+ *      *len = 0
  *---------------------------------------------------------*/
 void can_receive(uint16_t *msg_id, uint8_t *data, uint8_t *len)
 {
