@@ -15,9 +15,7 @@
 #define LEFT_IND_ON()               (PORTB |=  0x03)
 #define LEFT_IND_OFF()              (PORTB &= ~0x03)
 
-/*---------------------------------------------------------
- * Indicator Status Enumeration
- *---------------------------------------------------------*/
+// Indicator Status Enumeration
 typedef enum
 {
     e_ind_off = 0,
@@ -26,9 +24,7 @@ typedef enum
     e_ind_hazard
 } IndicatorStatus;
 
-/*---------------------------------------------------------
- * Application UI & CAN Message Handlers
- *---------------------------------------------------------*/
+// Application UI & CAN Message Handlers
 void display_labels(void);
 void process_canbus_data(void);
 
@@ -38,4 +34,4 @@ void handle_rpm_data(uint8_t *data, uint8_t len);
 void handle_engine_temp_data(uint8_t *data, uint8_t len);
 void handle_indicator_data(uint8_t *data, uint8_t len);
 
-#endif /* MSG_HANDLER_H */
+#endif
