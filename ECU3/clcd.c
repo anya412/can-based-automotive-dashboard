@@ -10,13 +10,12 @@
  *                - clcd_print()
  *                - clcd_putch()
  *                - clcd_clear()
- *
  ***********************************************************************/
 
 #include <xc.h>
 #include "clcd.h"
 
-/* Use TRISD for data direction */
+// TRIS D for data direction
 #define CLCD_DATA_DIR   TRISD
 #define CLCD_CTRL_DIR   TRISC
 
@@ -31,22 +30,22 @@
  *----------------------------------------------------------------------*/
 void clcd_write(unsigned char value, unsigned char control_bit)
 {
-    /* Select Command/Data register */
+    // Select Command/Data register
     CLCD_RS = control_bit;
 
-    /* Place value on PortD */
+    // Place value on Port D
     CLCD_PORT = value;
 
-    /* Enable strobe (min 200ns) */
+    // Enable strobe (min 200ns)
     CLCD_EN = HI;
     CLCD_EN = LO;
 
     /* Configure for reading busy flag */
-    CLCD_DATA_DIR = INPUT;         /* PortD = input */
-    CLCD_RW       = HI;            /* Read mode     */
+    CLCD_DATA_DIR = INPUT;         // PortD = input
+    CLCD_RW       = HI;            // Read mode
     CLCD_RS       = INSTRUCTION_COMMAND;
 
-    /* Poll busy flag */
+    // Poll busy flag
     do
     {
         CLCD_EN = HI;
@@ -54,7 +53,7 @@ void clcd_write(unsigned char value, unsigned char control_bit)
     }
     while (CLCD_BUSY);
 
-    /* Restore to write mode */
+    // Restore to write mode
     CLCD_RW       = LO;
     CLCD_DATA_DIR = OUTPUT;
 }
@@ -62,22 +61,22 @@ void clcd_write(unsigned char value, unsigned char control_bit)
 /*----------------------------------------------------------------------
  *  Function : init_clcd
  *  Description :
- *      Initializes CLCD controller according to HD44780 datasheet.
+ *      Initializes CLCD controller.
  *      Executes reset sequence, function set, display control,
  *      and clearing operations.
  *----------------------------------------------------------------------*/
 void init_clcd(void)
 {
-    /* Configure ports */
-    CLCD_DATA_DIR = OUTPUT;      /* PortD = data output */
-    CLCD_CTRL_DIR &= 0xF8;       /* RC2 (EN), RC1 (RS), RC0 (RW) as output */
+    // Configure ports
+    CLCD_DATA_DIR = OUTPUT;      // Port D = data output
+    CLCD_CTRL_DIR &= 0xF8;       // RC2 (EN), RC1 (RS), RC0 (RW) as output
 
     CLCD_RW = LO;
 
     /* Power-on delay (minimum 15ms required) */
     __delay_ms(30);
 
-    /* Reset sequence for LCD */
+    // Reset sequence for LCD
     clcd_write(LCD_RESET_SEQ, INSTRUCTION_COMMAND);
     __delay_us(4100);
 
@@ -91,15 +90,15 @@ void init_clcd(void)
     LCD_CMD_FUNCTION_SET();
     __delay_us(100);
 
-    /* Clear display */
+    // Clear display
     LCD_CMD_CLEAR();
     __delay_us(500);
 
-    /* Display ON, Cursor OFF */
+    // Display ON, Cursor OFF
     LCD_CMD_DISPLAY_ON();
     __delay_us(100);
 
-    /* Cursor home */
+    // Cursor home
     LCD_CMD_CURSOR_HOME();
     __delay_us(100);
 }
@@ -125,7 +124,7 @@ void clcd_print(const unsigned char *str, unsigned char addr)
 /*----------------------------------------------------------------------
  *  Function : clcd_putch
  *  Description :
- *      Prints a single character at a given LCD address.
+ *      Prints a single character at given LCD address.
  *
  *      ch   → character to display
  *      addr → display address
