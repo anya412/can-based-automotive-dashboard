@@ -1,6 +1,6 @@
 /***********************************************************************
  *  File name   : can.c
- *  Description : ECAN driver for PIC18 microcontroller.
+ *  Description : ECAN driver.
  *                Provides initialization, message transmit and receive
  *                interfaces using Standard Identifier (11-bit).
  *
@@ -14,9 +14,7 @@
 #include <stdint.h>
 #include "can.h"
 
-/*---------------------------------------------------------
- *  Local Helper : Read Standard ID from RX Buffer 0
- *---------------------------------------------------------*/
+// Read Standard ID from RX Buffer 0
 static uint16_t can_read_standard_id(void)
 {
     uint16_t std_id = 0;
@@ -27,9 +25,7 @@ static uint16_t can_read_standard_id(void)
     return std_id;
 }
 
-/*---------------------------------------------------------
- *  Local Helper : Write Standard ID into TX Buffer 0
- *---------------------------------------------------------*/
+// Write Standard ID into TX Buffer 0
 static void can_write_standard_id(uint16_t msg_id)
 {
     TXB0SIDL = (msg_id & 0x07) << 5;
@@ -131,13 +127,13 @@ void can_receive(uint16_t *msg_id, uint8_t *data, uint8_t *len)
     /* Check if RX buffer has data */
     if (RXB0FUL)
     {
-        /* Read Identifier */
+        // Read Identifier
         *msg_id = can_read_standard_id();
 
-        /* Read Data Length */
+        // Read Data Length
         *len = RXB0DLC;
 
-        /* Read Payload */
+        // Read Payload
         rx_buffer = (uint8_t *)&RXB0D0;
 
         for (uint8_t i = 0; i < *len; i++)
@@ -145,13 +141,13 @@ void can_receive(uint16_t *msg_id, uint8_t *data, uint8_t *len)
             data[i] = rx_buffer[i];
         }
 
-        /* Clear buffer flags */
+        // Clear buffer flags
         RXB0FUL = 0;
         RXB0IF  = 0;
 
         return;
     }
 
-    /* No message received */
+    // No message received
     *len = 0;
 }
