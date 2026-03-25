@@ -7,7 +7,6 @@
  *                - Indicators
  *
  *                Provides display routines and collision-event logic.
- *
  ***********************************************************************/
 
 #include <xc.h>
@@ -17,27 +16,19 @@
 #include "can.h"
 #include "clcd.h"
 
-/*---------------------------------------------------------
- * Global Tick Counter (updated in Timer0 ISR)
- *---------------------------------------------------------*/
+// Global Tick Counter
 unsigned long int g_timer_ticks;
 
-/*---------------------------------------------------------
- * Gear Labels (String table)
- *---------------------------------------------------------*/
+// Gear Labels
 static const unsigned char g_gear_labels[9][3] =
 {
     "ON", "GN", "G1", "G2", "G3", "G4", "G5", "Gr", "C_"
 };
 
-/*---------------------------------------------------------
- * Collision Detection Gear Code
- *---------------------------------------------------------*/
+// Collision Detection Gear Code
 #define GEAR_COLLISION_CODE     8
 
-/*---------------------------------------------------------
- * Display fixed labels on LCD
- *---------------------------------------------------------*/
+// Display fixed labels on LCD
 void display_labels(void)
 {
     clcd_print("SP",  LINE1(0));
@@ -46,19 +37,15 @@ void display_labels(void)
     clcd_print("IND", LINE1(13));
 }
 
-/*---------------------------------------------------------
- * SPEED Handler
- *---------------------------------------------------------*/
+// SPEED Handler
 void handle_speed_data(uint8_t *data, uint8_t len)
 {
-    /* Display 2-character speed */
+    // Display 2-character speed
     clcd_putch(data[0], LINE2(0));
     clcd_putch(data[1], LINE2(1));
 }
 
-/*---------------------------------------------------------
- * GEAR Handler
- *---------------------------------------------------------*/
+// GEAR Handler
 void handle_gear_data(uint8_t *data, uint8_t len)
 {
     if (*data < 9)
@@ -67,12 +54,7 @@ void handle_gear_data(uint8_t *data, uint8_t len)
     }
 }
 
-/*---------------------------------------------------------
- * RPM Handler
- * NOTE:
- *   Previous version incorrectly used clcd_print() on raw bytes.
- *   RPM data is NOT null-terminated, so print them individually.
- *---------------------------------------------------------*/
+// RPM Handler
 void handle_rpm_data(uint8_t *data, uint8_t len)
 {
     if (len >= 2)
@@ -90,7 +72,7 @@ void handle_indicator_data(uint8_t *data, uint8_t len)
 {
     int indicator = *data;
 
-    /* ON phase */
+    // ON phase
     if (g_timer_ticks <= 10000)
     {
         if (indicator == e_ind_off)
@@ -122,7 +104,7 @@ void handle_indicator_data(uint8_t *data, uint8_t len)
             clcd_putch('>', LINE2(15));
         }
     }
-    else    /* OFF phase */
+    else    // OFF phase
     {
         LEFT_IND_OFF();
         RIGHT_IND_OFF();
@@ -132,9 +114,7 @@ void handle_indicator_data(uint8_t *data, uint8_t len)
     }
 }
 
-/*---------------------------------------------------------
- * CAN Message Processing Logic
- *---------------------------------------------------------*/
+// CAN Message Processing Logic
 void process_canbus_data(void)
 {
     uint8_t  data[5];
@@ -145,7 +125,7 @@ void process_canbus_data(void)
 
     can_receive(&msg_id, data, &len);
 
-    /* Normal operation (no collision detected yet) */
+    // Normal operation (no collision detected yet)
     if (collision_flag == 0)
     {
         if (msg_id == SPEED_MSG_ID)
@@ -156,7 +136,7 @@ void process_canbus_data(void)
         {
             handle_gear_data(data, len);
 
-            /* Collision event triggered */
+            // Collision event triggered
             if (*data == GEAR_COLLISION_CODE)
             {
                 collision_flag = 1;
@@ -177,7 +157,7 @@ void process_canbus_data(void)
     }
     else
     {
-        /* Collision mode — only look for collision clearance msg */
+        // Collision mode - only look for collision clearance msg
         if (msg_id == GEAR_MSG_ID)
         {
             if (*data != GEAR_COLLISION_CODE)
