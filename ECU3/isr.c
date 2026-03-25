@@ -1,22 +1,24 @@
 #include <xc.h>
 
-/* External timing counter */
+// External timing counter
 extern unsigned long int timer_count;
 
-/*---------------------------------------------------------
- * Timer0 Interrupt Service Routine
- *---------------------------------------------------------*/
+// Timer 0 ISR
 void __interrupt() isr(void)
 {
-    if (TMR0IF)                             /* Timer0 overflow interrupt */
+    // Timer 0 overflow interrupt
+    if (TMR0IF)
     {
-        TMR0 = TMR0 + 9;                    /* Reload value (preserves timing) */
-
-        if (timer_count++ == 20000)         /* 20,000 ticks rollover */
+        // Reload value
+        TMR0 = TMR0 + 9;
+        
+        // 20,000 ticks rollover
+        if (timer_count++ == 20000)
         {
             timer_count = 0;
         }
 
-        TMR0IF = 0;                         /* Clear interrupt flag */
+        // Clear interrupt flag
+        TMR0IF = 0;                         
     }
 }
