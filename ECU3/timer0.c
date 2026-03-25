@@ -14,7 +14,7 @@
  **********************************************************/
 void init_timer0(void)
 {
-    // Select 8-bit Timer0
+    // Select 8-bit Timer 0
     T08BIT = 1;
 
     // Clock source = internal instruction cycle clock (Fosc/4)
@@ -29,9 +29,9 @@ void init_timer0(void)
     // Clear interrupt flag
     TMR0IF = 0;
 
-    // Enable Timer0 interrupt
+    // Enable Timer 0 interrupt
     TMR0IE = 1;
 
-    // Start Timer0
+    // Start Timer 0
     TMR0ON = 1;
 }
