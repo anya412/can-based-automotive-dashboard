@@ -1,13 +1,11 @@
 /***********************************************************************
  *  File name   : main.c
- *  Description : Application entry point.
- *                Initializes system modules and continuously processes
+ *  Description : Initializes system modules and continuously processes
  *                CAN messages for display and indicator control.
  ***********************************************************************/
 
 #include <xc.h>
 #include <stdint.h>
-
 #include "can.h"
 #include "clcd.h"
 #include "msg_id.h"
@@ -41,24 +39,21 @@ static void init_system(void)
     init_leds();
     init_timer0();
 
-    /* Enable global + peripheral interrupts */
+    // Enable global + peripheral interrupts
     PEIE = 1;
     GIE  = 1;
 }
 
-/*---------------------------------------------------------
- * Main Application  
- *---------------------------------------------------------*/
 void main(void)
 {
     init_system();
 
-    /* Display static labels once */
+    // Display static labels once
     display_labels();
 
     while (1)
     {
-        /* Read and process CAN data continuously */
+        // Read and process CAN data continuously
         process_canbus_data();
     }
 }
